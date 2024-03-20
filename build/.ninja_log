@@ -976,3 +976,13 @@
 7499	7898	7326751897294364	C:/vscode-esp32-workspace/esp32-temperature-web-server/build/.bin_timestamp	f0490f59a175122f
 7898	7965	0	esp-idf/esptool_py/CMakeFiles/app_check_size	fba2a43a9708aa71
 7898	7965	0	C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/esptool_py/CMakeFiles/app_check_size	fba2a43a9708aa71
+63	139	0	esp-idf/esptool_py/CMakeFiles/app_check_size	fba2a43a9708aa71
+63	139	0	C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/esptool_py/CMakeFiles/app_check_size	fba2a43a9708aa71
+54	287	7326748790668428	bootloader-prefix/src/bootloader-stamp/bootloader-build	2195f9da898accdc
+54	287	7326748790668428	bootloader/bootloader.elf	2195f9da898accdc
+54	287	7326748790668428	bootloader/bootloader.bin	2195f9da898accdc
+54	287	7326748790668428	bootloader/bootloader.map	2195f9da898accdc
+54	287	7326748790668428	C:/vscode-esp32-workspace/esp32-temperature-web-server/build/bootloader-prefix/src/bootloader-stamp/bootloader-build	2195f9da898accdc
+54	287	7326748790668428	C:/vscode-esp32-workspace/esp32-temperature-web-server/build/bootloader/bootloader.elf	2195f9da898accdc
+54	287	7326748790668428	C:/vscode-esp32-workspace/esp32-temperature-web-server/build/bootloader/bootloader.bin	2195f9da898accdc
+54	287	7326748790668428	C:/vscode-esp32-workspace/esp32-temperature-web-server/build/bootloader/bootloader.map	2195f9da898accdc
