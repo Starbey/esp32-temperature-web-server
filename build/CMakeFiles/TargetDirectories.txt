@@ -185,6 +185,13 @@ C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/esp_partiti
 C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/esp_partition/CMakeFiles/install/local.dir
 C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/esp_partition/CMakeFiles/install/strip.dir
 C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/app_update/CMakeFiles/__idf_app_update.dir
+C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/app_update/CMakeFiles/blank_ota_data.dir
+C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/app_update/CMakeFiles/read-otadata.dir
+C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/app_update/CMakeFiles/read_otadata.dir
+C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/app_update/CMakeFiles/erase-otadata.dir
+C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/app_update/CMakeFiles/erase_otadata.dir
+C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/app_update/CMakeFiles/otadata-flash.dir
+C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/app_update/CMakeFiles/encrypted-otadata-flash.dir
 C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/app_update/CMakeFiles/edit_cache.dir
 C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/app_update/CMakeFiles/rebuild_cache.dir
 C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/app_update/CMakeFiles/list_install_components.dir

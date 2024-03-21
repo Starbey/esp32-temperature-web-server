@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "esp32-temperature-web-server",
-    "project_version":    "1",
+    "project_version":    "eb9fff4-dirty",
     "project_path":       "C:/vscode-esp32-workspace/esp32-temperature-web-server",
     "idf_path":           "C:/Espressif/frameworks/esp-idf-v5.2.1",
     "build_dir":          "C:/vscode-esp32-workspace/esp32-temperature-web-server/build",
@@ -805,7 +805,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/main.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/rgb_led.c" ],
+            "sources": [ "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/main.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/rgb_led.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/wifi_app.c" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {
