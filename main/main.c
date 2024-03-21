@@ -1,21 +1,19 @@
-#include "freertos/FreeRTOS.h"
-#include "esp_wifi.h"
-#include "esp_system.h"
-#include "esp_event.h"
-#include "esp_event_loop.h"
-#include "nvs_flash.h"
-#include "driver/gpio.h"
+/**
+ * App entry point
+*/
 
-#include "rgb_led.h"
+#include "nvs_flash.h"
+
+#include "wifi_app.h"
 
 void app_main(void)
 {
-    while (true) {
-    	ledWifiAppStarted();
-    	vTaskDelay(1000 / portTICK_PERIOD_MS);
-    	ledHttpServerStarted();
-    	vTaskDelay(1000 / portTICK_PERIOD_MS);
-    	ledWifiConnected();
-    	vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
+    /* initialize (non-volatile storage) NVS */
+	esp_err_t ret = nvs_flash_init();
+	if(ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND){ // these errors can be handled by erasing and reflashing
+		ESP_ERROR_CHECK(nvs_flash_erase()); // clears flash
+		ret = nvs_flash_init();
+	}
+
+	wifiAppStart();
 }

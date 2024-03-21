@@ -49,7 +49,6 @@ static void wifiAppEventHandler(void *arg, esp_event_base_t eventBase, int32_t e
             case WIFI_EVENT_STA_DISCONNECTED: 
                 ESP_LOGI(TAG, "WIFI_EVENT_STA_DISCONNECTED");
                 break;
-            default:
         }
     }
     else if (eventBase == IP_EVENT){
@@ -57,7 +56,6 @@ static void wifiAppEventHandler(void *arg, esp_event_base_t eventBase, int32_t e
             case IP_EVENT_STA_GOT_IP:
                 ESP_LOGI(TAG, "IP_EVENT_STA_GOT_IP");
                 break;
-            default:
         }
     }
 }
@@ -129,9 +127,8 @@ static void wifiAppSoftApConfig(void){
     /* start AP DHCP server for connecting stations */
     ESP_ERROR_CHECK(esp_netif_dhcps_start(espNetifAp));
 
-    /* set mode as AP/station */
+    /* set mode as AP/station */ 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
-
     ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &apConfig)); // set config
     ESP_ERROR_CHECK(esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_AP_BANDWIDTH)); // set bandwidth
     ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_STA_POWER_SAVE)); // set bandwidth
