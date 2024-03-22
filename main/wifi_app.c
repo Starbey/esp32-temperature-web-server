@@ -10,6 +10,7 @@
 #include "rgb_led.h"
 #include "tasks_common.h"
 #include "wifi_app.h"
+#include "http_server.h"
 
 /* tag for esp serial console messages */
 static const char TAG[] = "wifi_app";
@@ -161,7 +162,7 @@ static void wifiAppTask(void *parameters){
             switch(msg.msgID){
                 case WIFI_APP_MSG_START_HTTP_SERVER:
                     ESP_LOGI(TAG, "WIFI_APP_MSG_START_HTTP_SERVER");
-                    //httpServerStart();
+                    httpServerStart();
                     ledHttpServerStarted();
                     break;
                 case WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER:
