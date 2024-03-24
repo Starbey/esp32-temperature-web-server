@@ -5,6 +5,7 @@
 #include "esp_timer.h"
 #include "esp_wifi.h"
 
+#include "DHT22.h"
 #include "http_server.h"
 #include "tasks_common.h"
 #include "wifi_app.h"
@@ -165,6 +166,7 @@ static esp_err_t httpServerFaviconIcoHandler(httpd_req_t *req){
 */
 esp_err_t httpServerOTAUpdateHandler(httpd_req_t *req){
     esp_ota_handle_t otaHandle;
+
     char otaBuf[1024]; // buffer to hold data received from webpage
     int contentLen = req->content_len;
     int contentRecv = 0;
@@ -251,10 +253,26 @@ esp_err_t httpServerOTAStatusHandler(httpd_req_t *req){
 
     ESP_LOGI(TAG, "OTAstatus requested");
 
-    sprintf(otaJSON, "{\"ota_update_status\":%d,\"compile_time\":\"%s\",\"compile_date\":\"%s}", g_fwUpdateStatus, __TIME__, __DATE__);
+    sprintf(otaJSON, "{\"ota_update_status\":%d,\"compile_time\":\"%s\",\"compile_date\":\"%s\"}", g_fwUpdateStatus, __TIME__, __DATE__);
 
     httpd_resp_set_type(req, "application/json");
     httpd_resp_send(req, otaJSON, strlen(otaJSON));
+
+    return ESP_OK;
+}
+
+/**
+ * DHT22 sensor readings json handler; responds with temp and humidity data
+ * @param req HTTP request for which the URI needs to be handled
+ * @return ESP_OK
+*/
+static esp_err_t httpServerGetDHTSensorReadingsJsonHandler(httpd_req_t *req){
+    ESP_LOGI(TAG, "/dhtSensor.json requested");
+
+    char dhtSensorJson[100];
+    sprintf(dhtSensorJson, "{\"temp\":\"%.1f\",\"humidity\":\"%.1f\"}", getTemperature(), getHumidity());
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, dhtSensorJson, strlen(dhtSensorJson));
 
     return ESP_OK;
 }
@@ -347,6 +365,15 @@ static httpd_handle_t httpServerConfig(void){
             .user_ctx = NULL,
         };
         httpd_register_uri_handler(httpServerHandle, &OTA_status);
+
+        /* register dhtSensor.json handler */
+        httpd_uri_t dht_sensor_json = {
+            .uri = "/dhtSensor.json",
+            .method = HTTP_GET,
+            .handler = httpServerGetDHTSensorReadingsJsonHandler,
+            .user_ctx = NULL,
+        };
+        httpd_register_uri_handler(httpServerHandle, &dht_sensor_json);
 
         return httpServerHandle;
     }
