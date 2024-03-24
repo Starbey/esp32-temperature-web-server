@@ -12,8 +12,11 @@
 #include "wifi_app.h"
 #include "http_server.h"
 
-/* tag for esp serial console messages */
 static const char TAG[] = "wifi_app";
+
+wifi_config_t *wifiConfig = NULL;
+
+static int g_retryNumber; // number of retries when a connection attempt fails
 
 static QueueHandle_t wifiAppQueueHandle; // event queue handle
 esp_netif_t* espNetifSta = NULL;
@@ -49,6 +52,19 @@ static void wifiAppEventHandler(void *arg, esp_event_base_t eventBase, int32_t e
                 break;
             case WIFI_EVENT_STA_DISCONNECTED: 
                 ESP_LOGI(TAG, "WIFI_EVENT_STA_DISCONNECTED");
+
+                wifi_event_sta_disconnected_t *wifiEventStaDisconnected;
+                wifiEventStaDisconnected = (wifi_event_sta_disconnected_t*) malloc(sizeof(wifi_event_sta_disconnected_t)); // set memory location
+                *wifiEventStaDisconnected = *( (wifi_event_sta_disconnected_t*) eventData ); //set value
+                printf("WIFI_EVENT_STA_DISCONNECTED, reason code %d\n", wifiEventStaDisconnected->reason);
+
+                if (g_retryNumber < MAX_CONNECTION_RETRIES){ // keep trying to reconnect until max retries
+                    esp_wifi_connect();
+                    g_retryNumber++;
+                }
+                else {
+                    wifiAppSendMsg(WIFI_APP_MSG_STA_DISCONNECTED);
+                }
                 break;
         }
     }
@@ -56,6 +72,7 @@ static void wifiAppEventHandler(void *arg, esp_event_base_t eventBase, int32_t e
         switch(eventId){
             case IP_EVENT_STA_GOT_IP:
                 ESP_LOGI(TAG, "IP_EVENT_STA_GOT_IP");
+                wifiAppSendMsg(WIFI_APP_MSG_STA_CONNECTED_GOT_IP);
                 break;
         }
     }
@@ -136,6 +153,14 @@ static void wifiAppSoftApConfig(void){
 }
 
 /**
+ * Attempts to connect the ESP32 to an AP using the updated station config
+*/
+static void wifiAppConnectSta(void){
+    ESP_ERROR_CHECK(esp_wifi_set_config( ESP_IF_WIFI_STA, wifiAppGetWifiConfig() )); // note that wifiAppGetWifiConfig() returns a pointer
+    ESP_ERROR_CHECK(esp_wifi_connect());
+}
+
+/**
  * WiFi app main task
  * @param parameters not in use
 */
@@ -165,13 +190,30 @@ static void wifiAppTask(void *parameters){
                     httpServerStart();
                     ledHttpServerStarted();
                     break;
+
                 case WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER:
                     ESP_LOGI(TAG, "WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER");
+
+                    /* attempt to connect */
+                    wifiAppConnectSta();
+                    g_retryNumber = 0;
+
+                    /* let HTTP server know about connection attempt */
+                    httpServerMonitorSendMsg(HTTP_MSG_WIFI_CONNECT_INIT);
+
                     break;
+
                 case WIFI_APP_MSG_STA_CONNECTED_GOT_IP:
                     ESP_LOGI(TAG, "WIFI_APP_MSG_STA_CONNECTED_GOT_IP");
                     ledWifiConnected();
+                    httpServerMonitorSendMsg(HTTP_MSG_WIFI_CONNECT_SUCCESS);
                     break;
+
+                case WIFI_APP_MSG_STA_DISCONNECTED:
+                    ESP_LOGI(TAG, "WIFI_APP_MSG_STA_DISCONNECTED");
+                    httpServerMonitorSendMsg(HTTP_MSG_WIFI_CONNECT_FAILED);
+                    break;
+
                 default:
             }
         }
@@ -186,10 +228,18 @@ BaseType_t wifiAppSendMsg(wifiAppMsg_e msgID){
     return xQueueSend(wifiAppQueueHandle, &msg, portMAX_DELAY); // returns pdTRUE if queue is not full
 }
 
+wifi_config_t* wifiAppGetWifiConfig(void){
+    return wifiConfig;
+}
+
 void wifiAppStart(void){
     ESP_LOGI(TAG, "STARTING WIFI APPLICATION");
     ledWifiAppStarted();
     esp_log_level_set("wifi", ESP_LOG_NONE); // disable default wifi logging msgs
+
+    /* allocate memory for wifi config */
+    wifiConfig = (wifi_config_t*) malloc(sizeof(wifi_config_t));
+    memset(wifiConfig, 0, sizeof(wifi_config_t)); // clear out possible pre-existing garbage data before using wifiConfig
 
     wifiAppQueueHandle = xQueueCreate(3, sizeof(wifiAppQueueMsg_t));
 

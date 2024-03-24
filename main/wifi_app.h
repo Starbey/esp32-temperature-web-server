@@ -37,6 +37,7 @@ typedef enum wifiAppMsg
 	WIFI_APP_MSG_START_HTTP_SERVER = 0,
 	WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER,
 	WIFI_APP_MSG_STA_CONNECTED_GOT_IP,
+	WIFI_APP_MSG_STA_DISCONNECTED,
 } wifiAppMsg_e;
 
 /**
@@ -60,7 +61,11 @@ BaseType_t wifiAppSendMsg(wifiAppMsg_e msgID);
  */
 void wifiAppStart(void);
 
-
+/**
+ * Gets wifi config
+ * @return Pointer to wifi config handle
+*/
+wifi_config_t* wifiAppGetWifiConfig(void);
 
 
 #endif /* MAIN_WIFI_APP_H_ */

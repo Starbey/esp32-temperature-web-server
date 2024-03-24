@@ -12,6 +12,8 @@
 
 static const char TAG[] = "http_server"; // tag for console msgs
 
+static int g_wifiConnectStatus = NONE;
+
 static int g_fwUpdateStatus = OTA_UPDATE_PENDING;
 
 static httpd_handle_t httpServerHandle = NULL;
@@ -73,12 +75,15 @@ static void httpServerMonitor(void *parameters){
             switch(msg.msgID){
                 case HTTP_MSG_WIFI_CONNECT_INIT:
                     ESP_LOGI(TAG,"HTTP_MSG_WIFI_CONNECT_INIT");
+                    g_wifiConnectStatus = HTTP_WIFI_STATUS_WIFI_CONNECTING;
                     break;
                 case HTTP_MSG_WIFI_CONNECT_SUCCESS:
                     ESP_LOGI(TAG, "HTTP_MSG_WIFI_CONNECT_SUCCESS");
+                    g_wifiConnectStatus = HTTP_WIFI_STATUS_CONNECT_SUCCESS;
                     break;
                 case HTTP_MSG_WIFI_CONNECT_FAILED:
                     ESP_LOGI(TAG, "HTTP_MSG_WIFI_CONNECT_FAILED");
+                    g_wifiConnectStatus = HTTP_WIFI_STATUS_CONNECT_FAILED;
                     break;
                 case HTTP_MSG_OTA_UPDATE_SUCCESS:
                     ESP_LOGI(TAG, "HTTP_MSG_WIFI_OTA_UPDATE_SUCCESS");
@@ -278,6 +283,67 @@ static esp_err_t httpServerGetDHTSensorReadingsJsonHandler(httpd_req_t *req){
 }
 
 /**
+ * WiFi connect json handler; invoked when connect button is pressed. Receives inputted SSID and pw from webpage.
+ * @param req HTTP request for which the URI needs to be handled
+ * @return ESP_OK
+*/
+static esp_err_t httpServerWifiConnectJsonHandler(httpd_req_t *req){
+    ESP_LOGI(TAG, "/wifiConnect.json requested");
+
+    size_t ssidLen = 0;
+    size_t pwLen = 0;
+    char *ssidStr = NULL;
+    char *pwStr = NULL;
+
+    /* get SSID header */
+    ssidLen = httpd_req_get_hdr_value_len(req, "my-connect-ssid") +1;
+    if (ssidLen > 1){
+        ssidStr = malloc(ssidLen);
+        if(httpd_req_get_hdr_value_str(req, "my-connect-ssid", ssidStr, ssidLen) == ESP_OK){
+            ESP_LOGI(TAG, "httpServerWifiConnectJsonHandler(): Found header for my-connect-ssid: %s", ssidStr);
+        }
+    }
+
+    /* get password header */
+    pwLen = httpd_req_get_hdr_value_len(req, "my-connect-pwd") +1;
+    if (pwLen > 1){
+        pwStr = malloc(pwLen);
+        if(httpd_req_get_hdr_value_str(req, "my-connect-pwd", pwStr, pwLen) == ESP_OK){
+            ESP_LOGI(TAG, "httpServerWifiConnectJsonHandler(): Found header for my-connect-pwd: %s", pwStr);
+        }
+    }
+
+    /* update wifi network config */
+    wifi_config_t *wifiConfig = wifiAppGetWifiConfig();
+    memset(wifiConfig, 0, sizeof(wifi_config_t));
+    memcpy(wifiConfig->sta.ssid, ssidStr, ssidLen);
+    memcpy(wifiConfig->sta.password, pwStr, pwLen);
+    wifiAppSendMsg(WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER);
+
+    free(ssidStr);
+    free(pwStr);
+
+    return ESP_OK;
+}
+
+/**
+ * Updates connection status on the webpage
+ * @param req HTTP request for which the URI needs to be handled
+ * @return ESP_OK
+ */
+static esp_err_t httpServerWifiConnectStatusJsonHandler(httpd_req_t *req){
+    ESP_LOGI(TAG, "/wifiConnectStatus requested");
+    
+    char statusJson[100];
+    sprintf(statusJson, "{\"wifi_connect_status\":%d}", g_wifiConnectStatus);
+    
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, statusJson, strlen(statusJson));
+
+    return ESP_OK;
+}
+
+/**
  * Configures default HTTPD server
  * #return http server instance handle if successful, NULL otherwise
 */
@@ -374,6 +440,25 @@ static httpd_handle_t httpServerConfig(void){
             .user_ctx = NULL,
         };
         httpd_register_uri_handler(httpServerHandle, &dht_sensor_json);
+
+        /* register wifiConnect.json handler */
+        httpd_uri_t wifi_connect_json = {
+            .uri = "/wifiConnect.json",
+            .method = HTTP_POST,
+            .handler = httpServerWifiConnectJsonHandler,
+            .user_ctx = NULL,
+        };
+        httpd_register_uri_handler(httpServerHandle, &wifi_connect_json);
+
+
+        /* register wifiConnectStatus.json handler */
+        httpd_uri_t wifi_connect_status_json = {
+            .uri = "/wifiConnectStatus",
+            .method = HTTP_POST,
+            .handler = httpServerWifiConnectStatusJsonHandler,
+            .user_ctx = NULL,
+        };
+        httpd_register_uri_handler(httpServerHandle, &wifi_connect_status_json);
 
         return httpServerHandle;
     }

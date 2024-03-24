@@ -3,6 +3,16 @@
 #define OTA_UPDATE_FAILED               -1
 
 /**
+ * Connection statuses for WiFi
+*/
+typedef enum httpServerWifiConnectStatus{
+    NONE = 0,
+    HTTP_WIFI_STATUS_WIFI_CONNECTING,
+    HTTP_WIFI_STATUS_CONNECT_FAILED,
+    HTTP_WIFI_STATUS_CONNECT_SUCCESS,
+}httpServerWifiConnectStatus_e;
+
+/**
  * Messages for HTTP monitor
 */
 
