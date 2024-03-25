@@ -30,7 +30,6 @@ extern esp_netif_t* espNetifAp;
 
 /**
  * Message IDs for the WiFi application task
- * @note Expand this based on your application requirements.
  */
 typedef enum wifiAppMsg
 {
@@ -38,6 +37,7 @@ typedef enum wifiAppMsg
 	WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER,
 	WIFI_APP_MSG_STA_CONNECTED_GOT_IP,
 	WIFI_APP_MSG_STA_DISCONNECTED,
+	WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT,
 } wifiAppMsg_e;
 
 /**

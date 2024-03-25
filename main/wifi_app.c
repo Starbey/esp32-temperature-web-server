@@ -214,6 +214,15 @@ static void wifiAppTask(void *parameters){
                     httpServerMonitorSendMsg(HTTP_MSG_WIFI_CONNECT_FAILED);
                     break;
 
+                case WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT:
+                    ESP_LOGI(TAG, "WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT");
+
+                    g_retryNumber = MAX_CONNECTION_RETRIES; // ensures app does not try to reconnect when disconnect button is pressed
+
+                    ESP_ERROR_CHECK(esp_wifi_disconnect());
+                    ledHttpServerStarted();
+
+                    break;
                 default:
             }
         }
