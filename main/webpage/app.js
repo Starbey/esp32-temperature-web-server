@@ -285,7 +285,7 @@ function getConnectInfo()
 		$("#gateway_label").html("Gateway: ");
 		$("#wifi_connect_gw").text(data["gw"]);
 		
-		document.getElementById('disconnect_wifi').style.display = 'block';
+		document.getElementById('disconnect_wifi').style.display = 'block'; // makes connection info visible
 	});
 }
 

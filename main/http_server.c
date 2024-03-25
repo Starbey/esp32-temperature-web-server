@@ -344,6 +344,41 @@ static esp_err_t httpServerWifiConnectStatusJsonHandler(httpd_req_t *req){
 }
 
 /**
+ * Updates connection info on the webpage
+ * @param req HTTP request for which the URI needs to be handled
+ * @return ESP_OK
+*/
+static esp_err_t httpServerGetWifiConnectInfoJsonHandler(httpd_req_t *req){
+    ESP_LOGI(TAG, "/wifiConnectInfo.json requested");
+
+    char infoJson[200];
+    memset(infoJson, 0, sizeof(infoJson));
+
+    char ip[IP4ADDR_STRLEN_MAX]; // max length for an IP4 address
+    char netmask[IP4ADDR_STRLEN_MAX];
+    char gw[IP4ADDR_STRLEN_MAX];
+
+    if(g_wifiConnectStatus == HTTP_WIFI_STATUS_CONNECT_SUCCESS){
+        wifi_ap_record_t wifiData;
+        ESP_ERROR_CHECK(esp_wifi_sta_get_ap_info(&wifiData));
+        char *ssid = (char*) wifiData.ssid;
+
+        esp_netif_ip_info_t ipInfo;
+        ESP_ERROR_CHECK(esp_netif_get_ip_info(espNetifSta, &ipInfo));
+        esp_ip4addr_ntoa(&ipInfo.ip, ip, IP4ADDR_STRLEN_MAX); // converts ip to ascii
+        esp_ip4addr_ntoa(&ipInfo.netmask, netmask, IP4ADDR_STRLEN_MAX);
+        esp_ip4addr_ntoa(&ipInfo.gw, gw, IP4ADDR_STRLEN_MAX);
+
+        sprintf(infoJson, "{\"ip\":\"%s\",\"netmask\":\"%s\",\"gw\":\"%s\",\"ap\":\"%s\"}", ip, netmask, gw, ssid);
+    }
+
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, infoJson, strlen(infoJson));
+    
+    return ESP_OK;
+}
+
+/**
  * Configures default HTTPD server
  * #return http server instance handle if successful, NULL otherwise
 */
@@ -459,6 +494,15 @@ static httpd_handle_t httpServerConfig(void){
             .user_ctx = NULL,
         };
         httpd_register_uri_handler(httpServerHandle, &wifi_connect_status_json);
+
+        /* register wifiConnectInfo.json handler */
+        httpd_uri_t wifi_connect_info_json = {
+            .uri = "/wifiConnectInfo.json",
+            .method = HTTP_GET,
+            .handler = httpServerGetWifiConnectInfoJsonHandler,
+            .user_ctx = NULL,
+        };
+        httpd_register_uri_handler(httpServerHandle, &wifi_connect_info_json);
 
         return httpServerHandle;
     }
