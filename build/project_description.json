@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "esp32-temperature-web-server",
-    "project_version":    "0594372-dirty",
+    "project_version":    "10cb8e2-dirty",
     "project_path":       "C:/vscode-esp32-workspace/esp32-temperature-web-server",
     "idf_path":           "C:/Espressif/frameworks/esp-idf-v5.2.1",
     "build_dir":          "C:/vscode-esp32-workspace/esp32-temperature-web-server/build",
@@ -805,7 +805,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/app_nvs.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/http_server.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/main.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/rgb_led.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/wifi_app.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/DHT22.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/app.css.S", "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/app.js.S", "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/favicon.ico.S", "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/index.html.S", "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/jquery-3.3.1.min.js.S" ],
+            "sources": [ "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/wifi_reset_button.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/app_nvs.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/http_server.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/main.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/rgb_led.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/wifi_app.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/main/DHT22.c", "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/app.css.S", "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/app.js.S", "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/favicon.ico.S", "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/index.html.S", "C:/vscode-esp32-workspace/esp32-temperature-web-server/build/jquery-3.3.1.min.js.S" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {

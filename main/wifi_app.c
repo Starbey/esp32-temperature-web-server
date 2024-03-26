@@ -24,6 +24,7 @@ static EventGroupHandle_t wifiAppEventGroup;
 const int WIFI_APP_CONNECTING_USING_SAVED_CREDS_BIT = BIT0;
 const int WIFI_APP_CONNECTING_FROM_HTTP_SERVER_BIT = BIT1;
 const int WIFI_APP_USER_REQUESTED_STA_DISCONNECT_BIT = BIT2;
+const int WIFI_APP_STA_CONNECTED_GOT_IP_BIT = BIT3; // set when ESP32 has a connection and is assigned an IP
 
 static QueueHandle_t wifiAppQueueHandle; // event queue handle
 esp_netif_t* espNetifSta = NULL;
@@ -231,6 +232,7 @@ static void wifiAppTask(void *parameters){
 
                 case WIFI_APP_MSG_STA_CONNECTED_GOT_IP:
                     ESP_LOGI(TAG, "WIFI_APP_MSG_STA_CONNECTED_GOT_IP");
+                    xEventGroupSetBits(wifiAppEventGroup, WIFI_APP_STA_CONNECTED_GOT_IP_BIT);
                     ledWifiConnected();
                     httpServerMonitorSendMsg(HTTP_MSG_WIFI_CONNECT_SUCCESS);
 
@@ -256,7 +258,7 @@ static void wifiAppTask(void *parameters){
                     if(eventBits & WIFI_APP_CONNECTING_USING_SAVED_CREDS_BIT){
                         ESP_LOGI(TAG, "WIFI_APP_MSG_STA_DISCONNECTED: Disconnect attempt using saved credentials");
                         xEventGroupClearBits(wifiAppEventGroup, WIFI_APP_CONNECTING_USING_SAVED_CREDS_BIT);
-                        appNVSClearStaCreds();
+                        appNVSClearStaCreds(); // after maximum (non-user requested) disconnects, delete station creds from NVS
                     }
                     else if(eventBits & WIFI_APP_CONNECTING_FROM_HTTP_SERVER_BIT){
                         ESP_LOGI(TAG, "WIFI_APP_MSG_STA_DISCONNECTED: Disconnect attempt from HTTP server");
@@ -273,20 +275,27 @@ static void wifiAppTask(void *parameters){
                         ESP_LOGI(TAG, "WIFI_APP_MSG_STA_DISCONNECTED: Attempt failed; check WiFi AP availability");
                     }
 
+                    if(eventBits & WIFI_APP_STA_CONNECTED_GOT_IP_BIT){
+                        xEventGroupClearBits(wifiAppEventGroup, WIFI_APP_STA_CONNECTED_GOT_IP_BIT);
+                    }
+
                     break;
 
                 case WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT:
                     ESP_LOGI(TAG, "WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT");
 
-                    xEventGroupSetBits(wifiAppEventGroup, WIFI_APP_USER_REQUESTED_STA_DISCONNECT_BIT);
+                    eventBits = xEventGroupGetBits(wifiAppEventGroup); // check if there's a valid connection before disconnecting
+                    if(eventBits & WIFI_APP_STA_CONNECTED_GOT_IP_BIT){
+                        xEventGroupSetBits(wifiAppEventGroup, WIFI_APP_USER_REQUESTED_STA_DISCONNECT_BIT);
 
-                    g_retryNumber = MAX_CONNECTION_RETRIES; // ensures app does not try to reconnect when disconnect button is pressed
+                        g_retryNumber = MAX_CONNECTION_RETRIES; // ensures app does not try to reconnect when disconnect button is pressed
 
-                    ESP_ERROR_CHECK(esp_wifi_disconnect());
-                    appNVSClearStaCreds();
-                    ledHttpServerStarted();
-
+                        ESP_ERROR_CHECK(esp_wifi_disconnect());
+                        appNVSClearStaCreds();
+                        ledHttpServerStarted();
+                    }
                     break;
+
                 default:
             }
         }

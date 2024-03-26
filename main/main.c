@@ -6,6 +6,7 @@
 
 #include "wifi_app.h"
 #include "DHT22.h"
+#include "wifi_reset_button.h"
 
 void app_main(void)
 {
@@ -17,6 +18,9 @@ void app_main(void)
 	}
 
 	wifiAppStart();
+
+	/* configure WiFi reset GPIO and interrupt */
+	wifiResetButtonConfig();
 
 	dht22TaskStart();
 }

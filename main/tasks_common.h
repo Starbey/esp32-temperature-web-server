@@ -16,4 +16,9 @@
 /**** DHT22 sensor task ****/
 #define DHT22_TASK_STACK_SIZE               4096
 #define DHT22_TASK_PRIORITY                 5
-#define DHT22_TASK_CORE_ID                  1
+#define DHT22_TASK_CORE_ID                  1 // will never block, so better to execute on another core so it doesn't preempt anything
+
+/**** wifi reset button task ****/
+#define WIFI_RESET_BUTTON_TASK_STACK_SIZE   2048
+#define WIFI_RESET_BUTTON_TASK_PRIOTIY      6
+#define WIFI_RESET_BUTTON_TASK_CORE_ID      0
