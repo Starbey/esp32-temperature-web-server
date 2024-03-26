@@ -21,7 +21,11 @@
         "esp_event_loop.h": "c",
         "event_groups.h": "c",
         "freertos.h": "c",
-        "netdb.h": "c"
+        "netdb.h": "c",
+        "bitset": "c",
+        "string_view": "c",
+        "regex": "c",
+        "format": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

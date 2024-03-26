@@ -38,6 +38,7 @@ typedef enum wifiAppMsg
 	WIFI_APP_MSG_STA_CONNECTED_GOT_IP,
 	WIFI_APP_MSG_STA_DISCONNECTED,
 	WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT,
+	WIFI_APP_MSG_LOAD_SAVED_CREDENTIALS,
 } wifiAppMsg_e;
 
 /**
@@ -63,7 +64,7 @@ void wifiAppStart(void);
 
 /**
  * Gets wifi config
- * @return Pointer to wifi config handle
+ * @return Pointer to WiFi config handle
 */
 wifi_config_t* wifiAppGetWifiConfig(void);
 

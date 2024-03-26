@@ -77,19 +77,28 @@ static void httpServerMonitor(void *parameters){
                     ESP_LOGI(TAG,"HTTP_MSG_WIFI_CONNECT_INIT");
                     g_wifiConnectStatus = HTTP_WIFI_STATUS_WIFI_CONNECTING;
                     break;
+
                 case HTTP_MSG_WIFI_CONNECT_SUCCESS:
                     ESP_LOGI(TAG, "HTTP_MSG_WIFI_CONNECT_SUCCESS");
                     g_wifiConnectStatus = HTTP_WIFI_STATUS_CONNECT_SUCCESS;
                     break;
+
                 case HTTP_MSG_WIFI_CONNECT_FAILED:
                     ESP_LOGI(TAG, "HTTP_MSG_WIFI_CONNECT_FAILED");
                     g_wifiConnectStatus = HTTP_WIFI_STATUS_CONNECT_FAILED;
                     break;
+
+                case HTTP_MSG_WIFI_USER_DISCONNECT:
+                    ESP_LOGI(TAG, "HTTP_MSG_WIFI_USER_DISCONNECT");
+                    g_wifiConnectStatus = HTTP_WIFI_STATUS_DISCONNECTED;
+                    break;
+
                 case HTTP_MSG_OTA_UPDATE_SUCCESS:
                     ESP_LOGI(TAG, "HTTP_MSG_WIFI_OTA_UPDATE_SUCCESS");
                     g_fwUpdateStatus = OTA_UPDATE_SUCCESS;
                     httpServerFwUpdateResetTimer();
                     break;
+
                 case HTTP_MSG_OTA_UPDATE_FAILED:
                     ESP_LOGI(TAG, "HTTP_MSG_WIFI_OTA_UPDATE_FAILED");
                     g_fwUpdateStatus = OTA_UPDATE_FAILED;
