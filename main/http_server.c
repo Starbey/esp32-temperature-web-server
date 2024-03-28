@@ -425,6 +425,26 @@ static esp_err_t httpServerGetLocalTimeJsonHandler(httpd_req_t *req){
     return ESP_OK;
 }
 
+/**
+ * Responds to HTTP request by sending AP SSID
+ * @param req HTTP request for which the URL needs to be handled
+ * @return ESP_OK
+*/
+static esp_err_t httpServerGetAPSSIDJsonHandler(httpd_req_t *req){
+    ESP_LOGI(TAG, "/apSSID.json requested");
+    
+    char ssidJson[50];
+
+    wifi_config_t *wifiConfig = wifiAppGetWifiConfig();
+    esp_wifi_get_config(ESP_IF_WIFI_AP, wifiConfig);
+    char *ssid = (char*) wifiConfig->ap.ssid;
+    sprintf(ssidJson, "{\"ssid\":\"%s\"}", ssid);
+
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, ssidJson, strlen(ssidJson));
+
+    return ESP_OK;
+}
 
 /**
  * Configures default HTTPD server
@@ -570,6 +590,15 @@ static httpd_handle_t httpServerConfig(void){
             .user_ctx = NULL,
         };
         httpd_register_uri_handler(httpServerHandle, &local_time_json);
+
+        /* register apSSID.json handler */
+        httpd_uri_t ap_ssid_json = {
+            .uri = "/apSSID.json",
+            .method = HTTP_GET,
+            .handler = httpServerGetAPSSIDJsonHandler,
+            .user_ctx = NULL,
+        };
+        httpd_register_uri_handler(httpServerHandle, &ap_ssid_json);
 
         return httpServerHandle;
     }
