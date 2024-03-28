@@ -89,11 +89,11 @@ function getUpdateStatus()
 
     if (xhr.readyState == 4 && xhr.status == 200) 
 	{		
-        var response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(xhr.responseText); // converts JSON into JS object
 						
 	 	document.getElementById("latest_firmware").innerHTML = response.compile_date + " - " + response.compile_time
 
-		// If flashing was complete it will return a 1, else -1
+		// If flashing was complete it will return 1, else -1
 		// A return of 0 is just for information on the Latest Firmware request
         if (response.ota_update_status == 1) 
 		{
@@ -315,7 +315,7 @@ function startLocalTimeInterval()
 
 /**
  * Gets the local time.
- * @note connect the ESP32 to the internet and the time will be updated.
+ * @note connect the ESP32 to the Internet and the time will be updated.
  */
 function getLocalTime()
 {

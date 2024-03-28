@@ -9,12 +9,13 @@
 #include "http_server.h"
 #include "tasks_common.h"
 #include "wifi_app.h"
+#include "sntp_time_sync.h"
 
 static const char TAG[] = "http_server"; // tag for console msgs
 
 static int g_wifiConnectStatus = NONE;
-
 static int g_fwUpdateStatus = OTA_UPDATE_PENDING;
+static bool g_isLocalTimeSet = false;
 
 static httpd_handle_t httpServerHandle = NULL;
 
@@ -102,6 +103,11 @@ static void httpServerMonitor(void *parameters){
                 case HTTP_MSG_OTA_UPDATE_FAILED:
                     ESP_LOGI(TAG, "HTTP_MSG_WIFI_OTA_UPDATE_FAILED");
                     g_fwUpdateStatus = OTA_UPDATE_FAILED;
+                    break;
+
+                case HTTP_MSG_TIME_SERVICE_INITIALIZED:
+                    ESP_LOGI(TAG, "HTTP_MSG_TIME_SERVICE_INITIALIZED");
+                    g_isLocalTimeSet = true;
                     break;
             }
         }
@@ -393,12 +399,32 @@ static esp_err_t httpServerGetWifiConnectInfoJsonHandler(httpd_req_t *req){
  * @return ESP_OK
 */
 static esp_err_t httpServerGetWifiDisconnectJsonHandler(httpd_req_t *req){
-    ESP_LOGI(TAG, "wifiDisconnect.json requested");
+    ESP_LOGI(TAG, "/wifiDisconnect.json requested");
 
     wifiAppSendMsg(WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT);
 
     return ESP_OK;
 }
+
+/**
+ * Responds to HTTP request by sending local time
+ * @param req HTTP request for which the URL needs to be handled
+ * @return ESP_OK
+*/
+static esp_err_t httpServerGetLocalTimeJsonHandler(httpd_req_t *req){
+    ESP_LOGI(TAG, "/localTime.json requested");
+
+    char localTimeJson[100] = {0};
+
+    if(g_isLocalTimeSet){
+        sprintf(localTimeJson, "{\"time\":\"%s\"}", sntpTimeSyncGetTime());
+    }
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, localTimeJson, strlen(localTimeJson));
+
+    return ESP_OK;
+}
+
 
 /**
  * Configures default HTTPD server
@@ -535,6 +561,15 @@ static httpd_handle_t httpServerConfig(void){
             .user_ctx = NULL,
         };
         httpd_register_uri_handler(httpServerHandle, &wifi_disconnect_json);
+
+        /* register localTime.json handler */
+        httpd_uri_t local_time_json = {
+            .uri = "/localTime.json",
+            .method = HTTP_GET,
+            .handler = httpServerGetLocalTimeJsonHandler,
+            .user_ctx = NULL,
+        };
+        httpd_register_uri_handler(httpServerHandle, &local_time_json);
 
         return httpServerHandle;
     }

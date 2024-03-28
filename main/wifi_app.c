@@ -15,6 +15,9 @@
 
 static const char TAG[] = "wifi_app";
 
+/* wifi app callback */
+static wifiConnectedEventCallback_t wifiConnectedEventCb;
+
 wifi_config_t *wifiConfig = NULL;
 
 static int g_retryNumber; // number of retries when a connection attempt fails
@@ -248,6 +251,11 @@ static void wifiAppTask(void *parameters){
                         xEventGroupClearBits(wifiAppEventGroup, WIFI_APP_CONNECTING_FROM_HTTP_SERVER_BIT);
                     }
 
+                    /* check for connection callback. if it's set, call it */
+                    if(wifiConnectedEventCb){
+                        wifiAppCallCallback();
+                    }
+
                     break;
 
                 case WIFI_APP_MSG_STA_DISCONNECTED:
@@ -312,6 +320,14 @@ BaseType_t wifiAppSendMsg(wifiAppMsg_e msgID){
 
 wifi_config_t* wifiAppGetWifiConfig(void){
     return wifiConfig;
+}
+
+void wifiAppSetCallback(wifiConnectedEventCallback_t callback){
+    wifiConnectedEventCb = callback;
+}
+
+void wifiAppCallCallback(void){
+    wifiConnectedEventCb();
 }
 
 void wifiAppStart(void){

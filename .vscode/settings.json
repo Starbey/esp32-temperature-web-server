@@ -25,7 +25,9 @@
         "bitset": "c",
         "string_view": "c",
         "regex": "c",
-        "format": "c"
+        "format": "c",
+        "sntp_time_sync.h": "c",
+        "ctime": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
