@@ -9,6 +9,7 @@
 #include "DHT22.h"
 #include "wifi_reset_button.h"
 #include "sntp_time_sync.h"
+#include "aws_iot.h"
 
 static const char TAG[] = "main";
 
@@ -16,6 +17,7 @@ static const char TAG[] = "main";
 void wifiApplicationConnectedEvents(void){
 	ESP_LOGI(TAG, "WiFi app connected");
 	sntpTimeSyncTaskStart(); // must have a valid wifi connection before starting this task
+	aws_iot_start();
 }
 
 void app_main(void)

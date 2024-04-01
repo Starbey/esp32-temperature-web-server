@@ -62,3 +62,4 @@ C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/perfmon/lib
 C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/spiffs/libspiffs.a
 C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/wifi_provisioning/libwifi_provisioning.a
 C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/main/libmain.a
+C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/esp-aws-iot/libesp-aws-iot.a

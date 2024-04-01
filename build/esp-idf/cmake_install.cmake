@@ -417,3 +417,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/main/cmake_install.cmake")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/vscode-esp32-workspace/esp32-temperature-web-server/build/esp-idf/esp-aws-iot/cmake_install.cmake")
+endif()
+
