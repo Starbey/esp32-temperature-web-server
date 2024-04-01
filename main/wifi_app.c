@@ -347,3 +347,11 @@ void wifiAppStart(void){
     xTaskCreatePinnedToCore(&wifiAppTask, "WiFi_App_Task", WIFI_APP_TASK_STACK_SIZE, NULL, WIFI_APP_TASK_PRIORITY, NULL, WIFI_APP_TASK_CORE_ID);
 
 }
+
+int8_t wifiAppGetRSSI(void){
+    wifi_ap_record_t wifiData;
+
+    ESP_ERROR_CHECK(esp_wifi_sta_get_ap_info(&wifiData));
+    
+    return wifiData.rssi;
+}

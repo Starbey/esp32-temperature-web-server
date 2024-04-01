@@ -193,8 +193,8 @@ void aws_iot_task(void *param) {
         }
 
         ESP_LOGI(TAG, "Stack remaining for task '%s' is %d bytes", pcTaskGetName(NULL), uxTaskGetStackHighWaterMark(NULL));
-        vTaskDelay(3000 / portTICK_PERIOD_MS);
-        //sprintf(cPayload, "%s : %d ", "WiFi RSSI", wifi_app_get_rssi());
+        vTaskDelay(pdMS_TO_TICKS(5000));
+        sprintf(cPayload, "%s : %d ", "WiFi RSSI", wifiAppGetRSSI());
         paramsQOS0.payloadLen = strlen(cPayload);
         rc = aws_iot_mqtt_publish(&client, TOPIC, TOPIC_LEN, &paramsQOS0);
 
