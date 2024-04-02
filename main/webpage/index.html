@@ -10,60 +10,63 @@
 		<title>ESP32 Webpage</title>
 	</head>
 	<body>
-	<header>
-		<h1>ESP32 Application Development</h1>
-	</header>
+    
+    <div class id="http_server">
+        <header>
+            <h1>ESP32 HTTP Server</h1>
+        </header>
+    </div>
 
-	<div id="EspSSID">
-		<h2>ESP32 SSID</h2>
-		<label for ="ap_ssid">AP SSID:</label>
-		<div id="ap_ssid"></div>
-	</div>
-	<hr>
+    <div id="main_content">
 
-	<div id="LocalTime">
-		<h2>SNTP Time Synchronization</h2>
-		<label for ="local_time">Connect to WiFi for local time:</label>
-		<div id="local_time"></div>
-	</div>
-	<hr>
-		
-	<div id="OTA">
-	<h2>ESP32 Firmware Update</h2>
-		<label id="latest_firmware_label">Latest Firmware: </label>
-		<div id="latest_firmware"></div> 
-		<input type="file" id="selected_file" accept=".bin" style="display: none;" onchange="getFileInfo()" />
-		<div class="buttons">
-			<input type="button" value="Select File" onclick="document.getElementById('selected_file').click();" />
-			<input type="button" value="Update Firmware" onclick="updateFirmware()" />
+		<div class = "content-box" id="EspSSID">
+			<h2>ESP32 SSID</h2>
+			<label for ="ap_ssid">AP SSID:</label>
+			<div id="ap_ssid"></div>
 		</div>
-		<h4 id="file_info"></h4>	
-		<h4 id="ota_update_status"></h4>
-	</div>
-	<hr>
 
-	<div id ="DHT22Sensor">
-		<h2>DHT22 Sensor Readings</h2>
-		<label for="temperature_reading">Temperature: </label>
-		<div id="temperature_reading"></div>
-		<label for="humidity_reading">Humidity: </label>
-		<div id="humidity_reading"></div>
-	</div>
-	<hr>
-
-	<div id = "WiFiConnect">
-		<h2>ESP32 WiFi Connect</h2>
-		<section> 
-			<input id ="connect_ssid" type ="text" maxlength="32" placeholder="SSID" value="">
-			<input id ="connect_pass" type ="password" maxlength="32" placeholder="Password" value="">
-			<input type="checkbox" onclick="showPassword()">Show Password
-		</section>
-		<div class="buttons">
-			<input id="connect_wifi" type="button" value="Connect"/>
+		<div class = "content-box" id="LocalTime">
+			<h2>SNTP Time Synchronization</h2>
+			<label for ="local_time">Connect to WiFi for local time:</label>
+			<div id="local_time"></div>
 		</div>
-		<div id="wifi_connect_credentials_errors"></div>
-		<h4 id="wifi_connect_status"></h4>
-	</div>
+			
+		<div class = "content-box" id="OTA">
+		<h2>ESP32 Firmware Update</h2>
+			<label id="latest_firmware_label">Latest Firmware Update: </label>
+			<div id="latest_firmware"></div> 
+			<input type="file" id="selected_file" accept=".bin" style="display: none;" onchange="getFileInfo()" />
+			<div class="buttons">
+				<input type="button" value="Select File" onclick="document.getElementById('selected_file').click();" />
+				<input type="button" value="Update Firmware" onclick="updateFirmware()" />
+			</div>
+			<h4 id="file_info"></h4>	
+			<h4 id="ota_update_status"></h4>
+		</div>
+
+		<div class = "content-box" id ="DHT22Sensor">
+			<h2>DHT22 Sensor Readings</h2>
+			<label for="temperature_reading">Temperature: </label>
+			<div id="temperature_reading"></div>
+			<label for="humidity_reading">Humidity: </label>
+			<div id="humidity_reading"></div>
+		</div>
+
+		<div class = "content-box" id = "WiFiConnect">
+			<h2>ESP32 WiFi Connect</h2>
+			<section> 
+				<input id ="connect_ssid" type ="text" maxlength="32" placeholder="SSID" value="">
+				<input id ="connect_pass" type ="password" maxlength="32" placeholder="Password" value="">
+				<input type="checkbox" onclick="showPassword()">Show Password
+			</section>
+			<div class="buttons">
+				<input id="connect_wifi" type="button" value="Connect"/>
+			</div>
+			<div id="wifi_connect_credentials_errors"></div>
+			<h4 id="wifi_connect_status"></h4>
+		</div>
+
+    </div>
 
 	<div id="ConnectInfo">
 		<section>
@@ -77,6 +80,6 @@
 		</div>
 	</div>
 	<hr>
-		
+
 	</body>
 <html>

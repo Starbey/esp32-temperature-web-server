@@ -1,19 +1,46 @@
 
 
 body {
-    background-color: #f1f1f1;
-    /* background-color: #222222; */
+    background-color: #e3e8fa;
     font-family: HelveticaNeueRegular, HelveticaNeue-Regular, "Helvetica Neue Regular", HelveticaNeue, "Helvetica Neue", Helvetica, Arial;
     color: #0272B7;
+}
+
+#http_server{
+    padding: 0px;
+    padding-top:30px;
+    padding-bottom:30px;
+    background-color:#10162b;
+    border-radius: 20px;
+    margin-left:20vw;
+    margin-right:20vw;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+#main_content{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:10px;
+}
+
+.content-box{
+    background-color: #bcbdc2;
+    border-radius:20px;
+    padding-top:5px;
+    padding-left:20px;
+    padding-right:20px;
+    padding-bottom:20px;
+    margin:10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 h1 {
     display: block;
     text-align: center;
     margin: 0;
-    padding: 10px;
-    font-size: 1.7em;
-    color: #1d3557;
+    padding: 0px;
+    font-size: 2.5em;
+    color: #ffffff;
 }
 
 h2 {
@@ -57,12 +84,12 @@ h4 {
 }	
 
 #temperature_reading{
-    display:inline;
+    /* display:inline; */
     color: #1d3557;
 }
 
 #humidity_reading{
-    display:inline;
+    /* display:inline; */
     color: #1d3557;
 }
 
@@ -111,7 +138,6 @@ input[type="button"] {
     padding: 0 5px;
     text-align: center;
     color: #ffffff;
-    text-shadow: 1px 1px 1px #000;
     border-radius: 10px;
     background-color: RGBA(106,125,144,0.35);
     background-image: linear-gradient(to top left,
@@ -130,15 +156,3 @@ input[type="button"]:active {
     box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
                 inset 2px 2px 3px rgba(0, 0, 0, .6);
 }
-
-
-
-
-
-
-
-
-
-
-
-
