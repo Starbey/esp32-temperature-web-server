@@ -8,8 +8,8 @@ A web server project using the ESP32's WiFi capabilities. Also incorporates AWS 
 
 
 ## Features
-- WiFi task allows ESP32 to act as both a station and SoftAP
-- Stores user AP credentials in non-volatile storage
-- Web server handles HTTP requests received from a JavaScript webpage
+- ESP32 acts as both a station and SoftAP
+- WiFi task stores user AP credentials in non-volatile storage
+- WiFi task waits for messages corresponding to HTTP requests in a queue, then consults a FSM to update application state 
 - Task to periodically poll a DHT22 sensor
 - User can view system logs and DHT22 data through the AWS IoT core message broker, which publishes messages via MQTT
